@@ -35,7 +35,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.weatherappdemo.ui.model.UICurrentWeather
 import com.example.weatherappdemo.ui.model.UIForecast
 import com.example.weatherappdemo.ui.theme.WeatherAppDemoTheme
 import com.example.weatherappdemo.util.Constants
@@ -57,7 +56,7 @@ fun WeatherScreen(
             scaffoldState.launch {
                 val result = snackbarHostState.showSnackbar(
                     message = weatherState.error, actionLabel = "Try Again",
-                    duration = SnackbarDuration.Long
+                    duration = SnackbarDuration.Indefinite
                 )
                 when (result) {
                     SnackbarResult.ActionPerformed -> {
@@ -93,8 +92,8 @@ fun WeatherScreen(
                         CircularProgressIndicator()
                     }
                 } else {
-                    CurrentWeatherSection(weatherState.currentWeather)
-                    ForecastListSection(weatherState.forecast)
+                    CurrentWeatherSection(weatherState)
+                    ForecastListSection(weatherState)
                 }
             }
         },
@@ -103,7 +102,7 @@ fun WeatherScreen(
 
 @Composable
 fun CurrentWeatherSection(
-    currentWeather: UICurrentWeather = UICurrentWeather()
+    weatherState: WeatherState = WeatherState()
 ) {
     Column(
         modifier = Modifier
@@ -112,19 +111,25 @@ fun CurrentWeatherSection(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        currentWeather.let {
+        weatherState.let {
             Text(
-                text = it.cityName,
+                text = it.currentWeather.cityName,
                 textAlign = TextAlign.Center,
                 style = TextStyle(fontSize = 16.sp)
             )
             Text(
-                text = "${it.temperature}°C",
+                text = if (it.hasError) "--" else "${it.currentWeather.temperature}°C",
                 textAlign = TextAlign.Center,
                 style = TextStyle(fontSize = 24.sp)
             )
             Text(
-                text = "Humidity: ${it.humidity}%",
+                text = "Humidity: ${
+                    if (it.hasError) {
+                        "--"
+                    } else {
+                        "${it.currentWeather.humidity}%"
+                    }
+                }",
                 textAlign = TextAlign.Center,
                 style = TextStyle(fontSize = 16.sp)
             )
@@ -135,6 +140,7 @@ fun CurrentWeatherSection(
 
 @Composable
 fun ForecastListSection(
+    weatherState: WeatherState = WeatherState(),
     forecastList: List<UIForecast> = listOf()
 ) {
     Column(
@@ -147,12 +153,15 @@ fun ForecastListSection(
                 fontSize = 16.sp, color = Color.Black
             )
         )
-        ForcastList(forecastList)
+        if (weatherState.hasError.not())
+            ForcastList(forecastList)
     }
 }
 
 @Composable
-fun ForcastList(forecastList: List<UIForecast> = listOf()) {
+fun ForcastList(
+    forecastList: List<UIForecast> = listOf()
+) {
     LazyColumn {
         items(forecastList) { item ->
             ListItem(forecastItem = item)
@@ -161,7 +170,9 @@ fun ForcastList(forecastList: List<UIForecast> = listOf()) {
 }
 
 @Composable
-fun ListItem(forecastItem: UIForecast) {
+fun ListItem(
+    forecastItem: UIForecast
+) {
     Column(
         modifier = Modifier
             .padding(4.dp)

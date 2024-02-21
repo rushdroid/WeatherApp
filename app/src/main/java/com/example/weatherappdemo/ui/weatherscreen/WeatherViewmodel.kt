@@ -25,6 +25,7 @@ class WeatherViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _weatherState.value = _weatherState.value.copy(
                 isLoading = true,
+                hasError = false,
                 error = ""
             )
             try {
@@ -35,6 +36,7 @@ class WeatherViewModel @Inject constructor(
                     WeatherState(
                         currentWeather,
                         forecast,
+                        hasError = false,
                         isLoading = false,
                         error = ""
                     )
@@ -43,7 +45,8 @@ class WeatherViewModel @Inject constructor(
                     Log.e("WeatherData", "Error fetching weather data: ${exception.message}")
                     _weatherState.value = _weatherState.value.copy(
                         isLoading = false,
-                        error = "Error fetching weather data"
+                        hasError = true,
+                        error = "Error while fetching weather data"
                     )
                 }.collect { weatherState ->
                     _weatherState.value = weatherState
@@ -51,6 +54,7 @@ class WeatherViewModel @Inject constructor(
             } catch (e: Exception) {
                 _weatherState.value = _weatherState.value.copy(
                     isLoading = false,
+                    hasError = true,
                     error = "Error fetching weather data"
                 )
             }

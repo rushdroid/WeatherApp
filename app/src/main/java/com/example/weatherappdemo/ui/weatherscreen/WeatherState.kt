@@ -7,5 +7,6 @@ data class WeatherState(
     val currentWeather: UICurrentWeather = UICurrentWeather(),
     val forecast: List<UIForecast> = listOf(),
     val isLoading: Boolean = false,
+    val hasError: Boolean = false,
     val error: String = ""
 )
