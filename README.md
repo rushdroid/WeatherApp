@@ -24,6 +24,9 @@ object Constants {
 - Retrofit: For making network requests
 - Coroutine: For asynchronous programming
 - Flow: For asynchronous data streams
+- Jetpack compose: For User Interface
+- JUnit: Unit test cases
+- Github Actions: For build and test unit test cases
 - Other best practices for Android development
 
 
