@@ -101,6 +101,23 @@ dependencies {
 
 // Retrofit with Coroutine Adapter
     implementation("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
+
+    // JUnit
+    testImplementation ("junit:junit:4.13.2")
+
+    // Mockito
+    testImplementation ("org.mockito:mockito-core:3.12.4")
+    testImplementation ("org.mockito.kotlin:mockito-kotlin:3.2.0")
+
+    // Kotlin Coroutines Test
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    testImplementation("io.mockk:mockk:1.12.0")
+
+    // AndroidX Test Core
+    testImplementation ("androidx.test:core:1.4.0")
+
+    // AndroidX Test Extensions
+    androidTestImplementation ("androidx.test.ext:junit:1.1.3")
 }
 
 kapt {

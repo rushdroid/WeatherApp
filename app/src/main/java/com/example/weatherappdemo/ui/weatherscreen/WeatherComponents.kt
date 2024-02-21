@@ -49,7 +49,7 @@ fun WeatherScreen(
     val scaffoldState = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(Unit) {
-        viewModel.fetchWeatherData(Constants.ZIP_CODE)
+        viewModel.fetchWeatherData(Constants.ZIP_CODE, Constants.API_KEY)
     }
 
     LaunchedEffect(weatherState.error.isNotEmpty()) {
@@ -61,7 +61,7 @@ fun WeatherScreen(
                 )
                 when (result) {
                     SnackbarResult.ActionPerformed -> {
-                        viewModel.fetchWeatherData(Constants.ZIP_CODE)
+                        viewModel.fetchWeatherData(Constants.ZIP_CODE, Constants.API_KEY)
                     }
 
                     SnackbarResult.Dismissed -> {
@@ -114,12 +114,12 @@ fun CurrentWeatherSection(
     ) {
         currentWeather.let {
             Text(
-                text = "City: ${it.cityName}",
+                text = it.cityName,
                 textAlign = TextAlign.Center,
                 style = TextStyle(fontSize = 16.sp)
             )
             Text(
-                text = "Temperature: ${it.temperature}°C",
+                text = "${it.temperature}°C",
                 textAlign = TextAlign.Center,
                 style = TextStyle(fontSize = 24.sp)
             )

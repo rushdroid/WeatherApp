@@ -1,0 +1,44 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+
+    - name: Set up Android SDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11'
+        android-sdk-version: '31.0.0'
+
+    - name: Make Gradlew executable
+      run: chmod +x gradlew
+
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    - name: Run unit tests
+      run: ./gradlew test
+
+    - name: Archive APK
+      uses: actions/upload-artifact@v2
+      with:        name: app-debug
+        path: app/build/outputs/apk/debug/app-debug.apk
+

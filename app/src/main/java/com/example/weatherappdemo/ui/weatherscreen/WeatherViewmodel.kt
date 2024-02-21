@@ -15,38 +15,46 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    private val weatherRepository: WeatherRepository
+    val weatherRepository: WeatherRepository
 ) : ViewModel() {
 
     private val _weatherState = MutableStateFlow(WeatherState())
     val weatherState: StateFlow<WeatherState> = _weatherState
 
-    fun fetchWeatherData(zipCode: String) {
-        viewModelScope.launch {
+    fun fetchWeatherData(zipCode: String, apiKey: String) {
+        viewModelScope.launch(Dispatchers.IO) {
             _weatherState.value = _weatherState.value.copy(
                 isLoading = true,
                 error = ""
             )
-            combine(
-                weatherRepository.getCurrentWeather(zipCode),
-                weatherRepository.getForecast(zipCode)
-            ) { currentWeather, forecast ->
-                WeatherState(
-                    currentWeather,
-                    forecast,
-                    isLoading = false,
-                    error = ""
-                )
-            }.catch { exception ->
-                exception.printStackTrace()
-                Log.e("WeatherData", "Error fetching weather data: ${exception.message}")
+            try {
+                combine(
+                    weatherRepository.getCurrentWeather(zipCode, apiKey),
+                    weatherRepository.getForecast(zipCode, apiKey)
+                ) { currentWeather, forecast ->
+                    WeatherState(
+                        currentWeather,
+                        forecast,
+                        isLoading = false,
+                        error = ""
+                    )
+                }.catch { exception ->
+                    exception.printStackTrace()
+                    Log.e("WeatherData", "Error fetching weather data: ${exception.message}")
+                    _weatherState.value = _weatherState.value.copy(
+                        isLoading = false,
+                        error = "Error fetching weather data"
+                    )
+                }.collect { weatherState ->
+                    _weatherState.value = weatherState
+                }
+            } catch (e: Exception) {
                 _weatherState.value = _weatherState.value.copy(
                     isLoading = false,
-                    error = "ABC ABC"
+                    error = "Error fetching weather data"
                 )
-            }.collect { weatherState ->
-                _weatherState.value = weatherState
             }
+
         }
     }
 }
