@@ -3,6 +3,7 @@ package com.example.weatherappdemo.ui.weatherscreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherappdemo.data.repository.WeatherRepository
+import com.example.weatherappdemo.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +21,7 @@ class WeatherViewModel @Inject constructor(
     private val _weatherState = MutableStateFlow(WeatherState())
     val weatherState: StateFlow<WeatherState> = _weatherState
 
-    fun fetchWeatherData(zipCode: String) {
+    fun fetchWeatherData() {
         viewModelScope.launch(Dispatchers.IO) {
             _weatherState.value = _weatherState.value.copy(
                 isLoading = true,
@@ -29,7 +30,7 @@ class WeatherViewModel @Inject constructor(
                 error = ""
             )
             try {
-                val zip = "${zipCode},IN"
+                val zip = "${_weatherState.value.zipCode},${Constants.COUNTRY_CODE}"
                 combine(
                     weatherRepository.getCurrentWeather(zip),
                     weatherRepository.getForecast(zip)
@@ -40,7 +41,7 @@ class WeatherViewModel @Inject constructor(
                         hasError = false,
                         isDataFetched = true,
                         isLoading = false,
-                        zipCode = zipCode,
+                        zipCode = _weatherState.value.zipCode,
                         error = ""
                     )
                 }.catch { exception ->

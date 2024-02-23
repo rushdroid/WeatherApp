@@ -66,7 +66,7 @@ fun WeatherScreen(
                 when (result) {
                     SnackbarResult.ActionPerformed -> {
                         if (weatherState.zipCode.isNotEmpty())
-                            viewModel.fetchWeatherData(weatherState.zipCode)
+                            viewModel.fetchWeatherData()
                     }
 
                     SnackbarResult.Dismissed -> {
@@ -123,9 +123,7 @@ fun WeatherScreen(
                             onClick = {
                                 keyboardController?.hide()
                                 if (weatherState.zipCode.isNotEmpty()) {
-                                    viewModel.fetchWeatherData(
-                                        weatherState.zipCode
-                                    )
+                                    viewModel.fetchWeatherData()
                                 } else {
                                     viewModel.showError(errorString = "Please enter valid zipcode")
                                 }

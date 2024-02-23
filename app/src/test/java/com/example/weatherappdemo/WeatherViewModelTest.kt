@@ -10,7 +10,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 
@@ -34,7 +33,7 @@ class WeatherViewModelTest {
         fakeRepository.isSuccess = true
         val zipCode = "380005"
         viewModel.saveZipCode(zipCode)
-        viewModel.fetchWeatherData(zipCode)
+        viewModel.fetchWeatherData()
         delay(10000)
         assert(
             viewModel.weatherState.value.currentWeather.cityName.isNotEmpty()
@@ -44,8 +43,9 @@ class WeatherViewModelTest {
     @Test
     fun fetchWeatherData_error() = runBlocking {
         fakeRepository.isSuccess = false
-        val zipCode = "INVALID ZIPCODE"
-        viewModel.fetchWeatherData(zipCode)
+        val zipCode = "380005"
+        viewModel.saveZipCode(zipCode)
+        viewModel.fetchWeatherData()
         delay(4000)
         assertTrue(viewModel.weatherState.value.error.isNotEmpty())
     }
