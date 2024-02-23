@@ -83,6 +83,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.50")
     kapt("com.google.dagger:hilt-compiler:2.50")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
 
 // Jetpack Compose
     implementation("androidx.compose.ui:ui:1.6.1")
@@ -110,14 +111,14 @@ dependencies {
     testImplementation ("org.mockito.kotlin:mockito-kotlin:3.2.0")
 
     // Kotlin Coroutines Test
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
     testImplementation("io.mockk:mockk:1.12.0")
 
     // AndroidX Test Core
-    testImplementation ("androidx.test:core:1.4.0")
+    testImplementation ("androidx.test:core:1.5.0")
 
     // AndroidX Test Extensions
-    androidTestImplementation ("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation ("androidx.test.ext:junit:1.1.5")
 }
 
 kapt {

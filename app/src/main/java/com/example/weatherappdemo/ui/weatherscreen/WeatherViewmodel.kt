@@ -1,6 +1,5 @@
 package com.example.weatherappdemo.ui.weatherscreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherappdemo.data.repository.WeatherRepository
@@ -21,44 +20,61 @@ class WeatherViewModel @Inject constructor(
     private val _weatherState = MutableStateFlow(WeatherState())
     val weatherState: StateFlow<WeatherState> = _weatherState
 
-    fun fetchWeatherData(zipCode: String, apiKey: String) {
+    fun fetchWeatherData(zipCode: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _weatherState.value = _weatherState.value.copy(
                 isLoading = true,
                 hasError = false,
+                isDataFetched = false,
                 error = ""
             )
             try {
+                val zip = "${zipCode},IN"
                 combine(
-                    weatherRepository.getCurrentWeather(zipCode, apiKey),
-                    weatherRepository.getForecast(zipCode, apiKey)
+                    weatherRepository.getCurrentWeather(zip),
+                    weatherRepository.getForecast(zip)
                 ) { currentWeather, forecast ->
                     WeatherState(
                         currentWeather,
                         forecast,
                         hasError = false,
+                        isDataFetched = true,
                         isLoading = false,
+                        zipCode = zipCode,
                         error = ""
                     )
                 }.catch { exception ->
                     exception.printStackTrace()
-                    Log.e("WeatherData", "Error fetching weather data: ${exception.message}")
                     _weatherState.value = _weatherState.value.copy(
                         isLoading = false,
                         hasError = true,
+                        isDataFetched = false,
                         error = "Error while fetching weather data"
                     )
                 }.collect { weatherState ->
                     _weatherState.value = weatherState
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
                 _weatherState.value = _weatherState.value.copy(
                     isLoading = false,
+                    isDataFetched = false,
                     hasError = true,
                     error = "Error fetching weather data"
                 )
             }
-
         }
+    }
+
+    fun saveZipCode(zipCode: String) {
+        _weatherState.value = _weatherState.value.copy(
+            zipCode = zipCode
+        )
+    }
+
+    fun showError(errorString: String) {
+        _weatherState.value = _weatherState.value.copy(
+            error = errorString
+        )
     }
 }
