@@ -14,7 +14,7 @@ You can replase
 object Constants {
     val BASE_URL = "https://api.openweathermap.org/data/2.5/"
     val API_KEY = "REPLACE YOUR API KEY" // Replace your api key
-    val ZIP_CODE = "380005,IN" // Replace zipcode
+    val COUNTRY_CODE = "IN" // Replace country code for which you want to get data
 }
 ```
 
@@ -73,9 +73,14 @@ jobs:
         run: ./gradlew testDebugUnitTest
       - name: Build with Gradle
         run: ./gradlew assembleDebug
+      - name: Archive Debug APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: debug-apk
+          path: app/build/outputs/apk/debug/*.apk
 ```
 
-This workflow will trigger on every push to the main branch, checking out the code, setting up Java 11, building the project with Gradle, and running unit tests.
+This workflow will trigger on every push to the main branch, checking out the code, setting up Java 11, building the project with Gradle, and running unit tests and generate the debug build.
 
 Make sure to replace "REPLACE YOUR API KEY" with your actual OpenWeatherMap API key.
 

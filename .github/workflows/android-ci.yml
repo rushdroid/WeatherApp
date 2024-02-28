@@ -22,3 +22,9 @@ jobs:
         run: ./gradlew testDebugUnitTest
       - name: Build with Gradle
         run: ./gradlew assembleDebug
+      - name: Archive Debug APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+
