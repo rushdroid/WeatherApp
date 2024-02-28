@@ -83,7 +83,9 @@ fun WeatherScreen(
                 hostState = snackbarHostState
             )
         },
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.White),
         content = {
             Column(
                 modifier = Modifier
@@ -112,7 +114,7 @@ fun WeatherScreen(
                                 viewModel.saveZipCode(newValue)
                             },
                             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                            label = { Text("Enter zipcode (only INDIA)") },
+                            label = { Text("Enter zipcode (only INDIA)", color = Color.Gray) },
                             modifier = Modifier
                                 .weight(0.7f)
                         )

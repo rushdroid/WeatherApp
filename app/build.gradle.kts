@@ -5,6 +5,7 @@ plugins {
     id("kotlin-android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("jacoco")
 }
 
 android {
@@ -25,6 +26,10 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+            // Enable test coverage
+            enableUnitTestCoverage = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -51,6 +56,9 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    testCoverage {
+        jacocoVersion = "0.8.7"
     }
 }
 
